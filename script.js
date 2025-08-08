@@ -59,29 +59,47 @@
   typeWords();
 
 
- const lines = document.querySelectorAll('.typing-line');
+const lines = document.querySelectorAll('.typing-line');
 
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      lines.forEach((line, i) => {
-        const text = line.dataset.text;
-        const delay = i * 2500;
-
-        setTimeout(() => {
-          line.textContent = text;
-          line.style.animation = `typing 2s steps(${text.length}, end) forwards, blinking 1s step-end infinite`;
-        }, delay);
-      });
-
-      observer.disconnect(); // empêche que ça se relance à chaque scroll
+      animateLines();
+      observer.disconnect();
     }
   });
 }, {
   threshold: 0.8,
 });
 
-observer.observe(document.querySelector('.about-text'));
+observer.observe(document.querySelector('.about-content'));
+
+function animateLines() {
+  let currentLine = 0;
+
+  function typeLine() {
+    const line = lines[currentLine];
+    const text = line.dataset.text;
+    let index = 0;
+    
+    line.textContent = ''; // ← CRUCIAL !
+    line.style.opacity = 1;
+
+    const interval = setInterval(() => {
+      line.textContent += text[index];
+      index++;
+      if (index === text.length) {
+        clearInterval(interval);
+        currentLine++;
+        if (currentLine < lines.length) {
+          setTimeout(typeLine, 500); // delay before next line
+        }
+      }
+    }, 30); // typing speed
+  }
+
+  typeLine();
+}
 
  function copyEmail(event) {
     event.preventDefault(); // prevent default link behavior
@@ -98,3 +116,18 @@ observer.observe(document.querySelector('.about-text'));
       }, 3000);
     });
   }
+
+
+ interact('.draggable').draggable({
+    listeners: {
+      move (event) {
+        const target = event.target;
+        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      }
+    }
+  });

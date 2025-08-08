@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding-top: 80px; /* Pour éviter que la navbar cache le haut */
-  min-height: 100vh;
+  
   background: linear-gradient(to bottom right, black, #111827, black);
   
  
@@ -178,10 +178,15 @@ body {
 }
 
 .avatar-icon {
-  font-size: 80px;
+  
   color: #22d3ee;
 }
 
+.avatar-icon {
+  height: 80px; /* ajuste à ta convenance */
+  width: auto;
+   filter: invert(63%) sepia(97%) saturate(400%) hue-rotate(147deg) brightness(104%) contrast(102%);
+}
 .avatar-ping {
   position: absolute;
   border-radius: 50%;
@@ -189,7 +194,25 @@ body {
   border: 1px solid #00ffff;
   animation: ping 1s infinite;
 }
+.draggable {
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
 
+.floating {
+  animation: float 4s ease-in-out infinite;
+  pointer-events: none; /* empêche de bloquer le drag sur l'image */
+}
+
+@keyframes float {
+  0%   { transform: translate(0px, 0px) rotate(0deg); }
+  25%  { transform: translate(3px, -5px) rotate(1deg); }
+  50%  { transform: translate(0px, -10px) rotate(-1deg); }
+  75%  { transform: translate(-3px, -5px) rotate(1deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
 .ping-1 {
   top: -16px; left: -16px; right: -16px; bottom: -16px;
   border-color: rgba(0, 255, 255, 0.3);
@@ -436,12 +459,16 @@ body {
   color: #22d3ee;
   z-index: 3;
 }
-
+@media screen and (max-width: 768px) {
+  .brain-box {
+    display: none;
+  }
+}
 /* Right: Text */
 .about-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .about-block h3 {
@@ -454,6 +481,8 @@ body {
 .about-block {
   border-left: 4px solid #22d3ee;
   padding-left: 1.5rem;
+   max-width: 100%;
+  overflow-x: hidden;
 }
 
 .about-text {
@@ -462,6 +491,7 @@ body {
   color: #d1d5db;
   line-height: 1.75;
 }
+
 
 .about-text p {
   margin-bottom: 1rem;
@@ -706,14 +736,14 @@ body {
 .typing-line {
   display: inline-block;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: normal;
    
   border-right: 2px solid #0ff;
   padding-left: 5px;
   font-family: monospace;
   font-size: 16px;
   color: #ffff;
-  width: 0;
+  
   opacity: 0;
 }
 
